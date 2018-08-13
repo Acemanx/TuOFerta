@@ -7,6 +7,7 @@ package io.swagger.api;
 
 import io.swagger.model.JsonApiBodyRequest;
 import io.swagger.model.JsonApiBodyRequest2;
+import io.swagger.model.JsonApiBodyRequest3;
 import io.swagger.model.JsonApiBodyResponseErrors;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -68,5 +69,15 @@ public interface ListarApi {
         consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<?> listarRolRolGet(@ApiParam(value = "body",required=true)  @Valid @RequestBody JsonApiBodyRequest2 body);
+
+    @ApiOperation(value = "iniciar sesión", nickname = "loginPersona", notes = "se inicia sesión", response = JsonApiBodyRequest.class, tags={ "persona", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Credenciales correctas", response = JsonApiBodyRequest.class),
+        @ApiResponse(code = 404, message = "Error en el inicio de sesión", response = JsonApiBodyResponseErrors.class) })
+    @RequestMapping(value = "/sesion",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<?> loginPersona(@ApiParam(value = "body",required=true)  @Valid @RequestBody JsonApiBodyRequest3 body);
 
 }

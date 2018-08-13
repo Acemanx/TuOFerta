@@ -2,6 +2,7 @@ package io.swagger.api;
 
 import io.swagger.model.JsonApiBodyRequest;
 import io.swagger.model.JsonApiBodyRequest2;
+import io.swagger.model.JsonApiBodyRequest3;
 import io.swagger.model.JsonApiBodyResponseErrors;
 import io.swagger.model.JsonApiBodyResponseSuccess;
 import io.swagger.model.RegistrarRequest;
@@ -69,7 +70,7 @@ public class ListarApiController implements ListarApi {
 			responseError.setCodigo(flags.SUPERADMINMASTER_LISTAR_ERROR_CODE);
 			responseError.setDetalle(flags.SUPERADMINMASTER_LISTAR_MSN);
 			return new ResponseEntity<JsonApiBodyResponseErrors>(responseError, HttpStatus.BAD_REQUEST);
-		} else if (!body.getPersona().get(0).getRol().equalsIgnoreCase("superadminmaster")
+		} else if (!body.getPersona().get(0).getRol().equalsIgnoreCase("adminmaster")
 				|| !body.getPersona().get(0).getToken().equalsIgnoreCase("TOKEN")) {
 			responseError.setCodigo(flags.SUPERADMINMASTER_LISTAR_ERROR_CODE);
 			responseError.setDetalle(flags.SUPERADMINMASTER_LISTAR_MSN);
@@ -103,22 +104,20 @@ public class ListarApiController implements ListarApi {
 		List<RegistrarRequest> token = userRepository.findByToken("SuperAdmin");
 
 
-		System.out.println(body);
-		
-
-		
+		//System.out.println(body);
+			
 		if (accept != null && accept.contains("application/json")) {
 		if (token == null || token.isEmpty()) {
 			responseError.setCodigo(flags.SUPERADMINMASTER_LISTAR_ERROR_CODE);
 			responseError.setDetalle(flags.SUPERADMINMASTER_LISTAR_MSN);
 			return new ResponseEntity<JsonApiBodyResponseErrors>(responseError, HttpStatus.BAD_REQUEST);
-		} else if (!body.getPersona().get(0).getRol().equalsIgnoreCase("superadminmaster")
+		} else if (!body.getPersona().get(0).getRol().equalsIgnoreCase("superadmin")
 				&& !body.getPersona().get(0).getToken().equals("TOKEN")) {
 			responseError.setCodigo(flags.SUPERADMINMASTER_LISTAR_ERROR_CODE);
 			responseError.setDetalle(flags.SUPERADMINMASTER_LISTAR_MSN);
 			return new ResponseEntity<JsonApiBodyResponseErrors>(responseError, HttpStatus.BAD_REQUEST);
 		} else {
-			if (body.getPersona().get(0).getRol().equalsIgnoreCase("superadminmaster")
+			if (body.getPersona().get(0).getRol().equalsIgnoreCase("superadmin")
 					&& body.getPersona().get(0).getToken().equals("SuperAdmin")) {
 				body1.setPersona(lista);
 				return new ResponseEntity<JsonApiBodyRequest>(body1, HttpStatus.OK);
@@ -139,9 +138,9 @@ public class ListarApiController implements ListarApi {
 		JsonApiBodyResponseErrors responseErrors = new JsonApiBodyResponseErrors();
 		if (accept != null && accept.contains("application/json")) {
 			RegistrarRequest persona = userRepository.findOne(body.getPersona().get(0).getId());
-			System.out.println(persona);
+			//System.out.println(persona);
 			List<RegistrarRequest> lista = new ArrayList<RegistrarRequest>();
-			if (body.getPersona().get(0).getRol().equalsIgnoreCase("SuperAdminMaster") && body.getPersona().get(0).getToken().equalsIgnoreCase("TOKEN")) { 
+			if (body.getPersona().get(0).getRol().equalsIgnoreCase("AdminMaster") && body.getPersona().get(0).getToken().equalsIgnoreCase("TOKEN")) { 
 				lista.add(persona);
 				for (RegistrarRequest registrarRequest : lista) {
 					System.out.println(registrarRequest.getCorreo());
@@ -171,8 +170,10 @@ public class ListarApiController implements ListarApi {
 			responseError.setCodigo(flags.SUPERADMINMASTER_LISTAR_ERROR_CODE);
 			responseError.setDetalle(flags.SUPERADMINMASTER_LISTAR_MSN);
 			return new ResponseEntity<JsonApiBodyResponseErrors>(responseError, HttpStatus.BAD_REQUEST);
-		} else if (!body.getPersona().get(0).getRol().equalsIgnoreCase("superadminmaster")
-				|| !body.getPersona().get(0).getToken().equalsIgnoreCase("TOKEN")) {
+//		} else if (!body.getPersona().get(0).getRol().equalsIgnoreCase("superadmin")
+//				|| !body.getPersona().get(0).getToken().equalsIgnoreCase("TOKEN")) {
+			
+			} else if (!body.getPersona().get(0).getToken().equalsIgnoreCase("TOKEN")) {
 			responseError.setCodigo(flags.SUPERADMINMASTER_LISTAR_ERROR_CODE);
 			responseError.setDetalle(flags.SUPERADMINMASTER_LISTAR_MSN);
 			return new ResponseEntity<JsonApiBodyResponseErrors>(responseError, HttpStatus.BAD_REQUEST);
@@ -180,19 +181,34 @@ public class ListarApiController implements ListarApi {
 			body1.setPersona(rol);
 			return new ResponseEntity<JsonApiBodyRequest>(body1, HttpStatus.OK);
 		}
-		/*
-		 * List<RegistrarRequest> lista = (List<RegistrarRequest>) userRepository
-		 * .findByRol(body.getPersona().get(0).getRol()); JsonApiBodyResponseErrors
-		 * responseErrors = new JsonApiBodyResponseErrors(); JsonApiBodyResponseSuccess
-		 * responseSuccess = new JsonApiBodyResponseSuccess(); JsonApiBodyRequest body1
-		 * = new JsonApiBodyRequest(); if (lista.isEmpty()) {
-		 * responseErrors.setCodigo(flags.CODE_2001);
-		 * responseErrors.setDetalle(flags.MSN_CODE_2001); return new
-		 * ResponseEntity<JsonApiBodyResponseErrors>(responseErrors,
-		 * HttpStatus.BAD_REQUEST); } else { body1.setPersona(lista); return new
-		 * ResponseEntity<JsonApiBodyResponseSuccess>(responseSuccess, HttpStatus.OK); }
-		 * 
-		 */
+
+	}
+	
+	public ResponseEntity<?> loginPersona(@ApiParam(value = "body", required = true) @Valid @RequestBody JsonApiBodyRequest3 body) {
+		String accept = request.getHeader("Accept");
+		JsonApiBodyRequest persona = new JsonApiBodyRequest();
+		JsonApiBodyResponseErrors responseErrors = new JsonApiBodyResponseErrors();
+		JsonApiBodyResponseSuccess responseSuccess = new JsonApiBodyResponseSuccess();
+		if (accept != null && accept.contains("application/json")) {
+			List<RegistrarRequest> login = userRepository.findByCorreo(body.getPersona().get(0).getCorreo());
+			if(login.isEmpty()) {
+				responseErrors.codigo("123");
+				responseErrors.detalle("No existe el usuario");
+				return new ResponseEntity<JsonApiBodyResponseErrors>(responseErrors, HttpStatus.CONFLICT);
+			}else {
+				if(login.get(0).getContrasena().equals(body.getPersona().get(0).getContrasena())) {
+					persona.setPersona(login);
+					return new ResponseEntity<JsonApiBodyRequest>(persona, HttpStatus.OK);
+				}else {
+					responseErrors.codigo("124");
+					responseErrors.detalle("Contraseña o usuario incorrecto");
+					return new ResponseEntity<JsonApiBodyResponseErrors>(responseErrors, HttpStatus.CONFLICT);
+			
+				}
+			}
+		}	
+		
+		return new ResponseEntity<JsonApiBodyResponseErrors>(responseErrors, HttpStatus.FAILED_DEPENDENCY);
 	}
 
 }

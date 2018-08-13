@@ -163,6 +163,9 @@ public class EditarApiController implements EditarApi {
 					responseSuccess.setEstado(request.getPersona().get(0).getEstado());
 					return new ResponseEntity<JsonApiBodyResponseSuccess>(responseSuccess, HttpStatus.OK);
 				} else {
+					RegistrarRequest persona = userRepository.save(body.getPersona().get(0));
+
+					System.out.println(persona);
 					responseError.setCodigo(flags.CODE_2003);
 					responseError.setDetalle(flags.MSN_CODE_2003);
 					return new ResponseEntity<JsonApiBodyResponseErrors>(responseError, HttpStatus.FAILED_DEPENDENCY);
@@ -173,6 +176,11 @@ public class EditarApiController implements EditarApi {
 				responseError.setDetalle(flags.MSN_CODE_4004);
 				return new ResponseEntity<JsonApiBodyResponseErrors>(responseError, HttpStatus.FAILED_DEPENDENCY);
 			}
+		}else {
+			responseError.setCodigo(flags.CODE_2003);
+			responseError.setDetalle(flags.MSN_CODE_2003);
+			return new ResponseEntity<JsonApiBodyResponseErrors>(responseError, HttpStatus.FAILED_DEPENDENCY);
+
 		}
 		responseError.setCodigo(flags.CODE_2003);
 		responseError.setDetalle(flags.MSN_CODE_2003);

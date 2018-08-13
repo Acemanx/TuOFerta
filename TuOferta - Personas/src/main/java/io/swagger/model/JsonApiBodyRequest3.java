@@ -16,40 +16,38 @@ import javax.validation.constraints.*;
  * JsonApiBodyRequest
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-08-06T16:22:00.908Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-07-25T19:32:17.596Z")
 
-public class JsonApiBodyRequest   {
-  @JsonProperty("usuario")
+public class JsonApiBodyRequest3   {
+  @JsonProperty("persona")
   @Valid
-  private List<RegistrarRequest> usuario = null;
+  private List<RegistrarRequest3> persona;
 
-  public JsonApiBodyRequest usuario(List<RegistrarRequest> usuario) {
-    this.usuario = usuario;
+  public JsonApiBodyRequest3 persona(List<RegistrarRequest3> persona) {
+    this.persona = persona;
     return this;
   }
 
-  public JsonApiBodyRequest addUsuarioItem(RegistrarRequest usuarioItem) {
-    if (this.usuario == null) {
-      this.usuario = new ArrayList<RegistrarRequest>();
-    }
-    this.usuario.add(usuarioItem);
+  public JsonApiBodyRequest3 addPersonaItem(RegistrarRequest3 personaItem) {
+    this.persona.add(personaItem);
     return this;
   }
 
   /**
-   * Get usuario
-   * @return usuario
+   * Get persona
+   * @return persona
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
 
   @Valid
 
-  public List<RegistrarRequest> getUsuario() {
-    return usuario;
+  public List<RegistrarRequest3> getPersona() {
+    return persona;
   }
 
-  public void setUsuario(List<RegistrarRequest> usuario) {
-    this.usuario = usuario;
+  public void setPersona(List<RegistrarRequest3> persona) {
+    this.persona = persona;
   }
 
 
@@ -61,13 +59,13 @@ public class JsonApiBodyRequest   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    JsonApiBodyRequest jsonApiBodyRequest = (JsonApiBodyRequest) o;
-    return Objects.equals(this.usuario, jsonApiBodyRequest.usuario);
+    JsonApiBodyRequest3 jsonApiBodyRequest = (JsonApiBodyRequest3) o;
+    return Objects.equals(this.persona, jsonApiBodyRequest.persona);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(usuario);
+    return Objects.hash(persona);
   }
 
   @Override
@@ -75,7 +73,7 @@ public class JsonApiBodyRequest   {
     StringBuilder sb = new StringBuilder();
     sb.append("class JsonApiBodyRequest {\n");
     
-    sb.append("    usuario: ").append(toIndentedString(usuario)).append("\n");
+    sb.append("    persona: ").append(toIndentedString(persona)).append("\n");
     sb.append("}");
     return sb.toString();
   }
