@@ -75,16 +75,16 @@ public class RegistrarApiController implements RegistrarApi {
 		List<RegistrarRequest> lista = (List<RegistrarRequest>) userRepository
 				.findByCorreo(request.getPersona().get(0).getCorreo());
 		// traer ID de la persona para verificar que no esté registrado
-		RegistrarRequest persona_registro = userRepository.findOne(body.getPersona().get(0).getId());
-
-		if (persona_registro == null) {
+		//RegistrarRequest persona_registro = userRepository.findOne(body.getPersona().get(0).getId());
+		
 			if (lista.size() == 0) {
-				if (request.getPersona().get(0).getRol().equalsIgnoreCase("superadmin")
-						|| request.getPersona().get(0).getId().equalsIgnoreCase("1")) {
+				//if (request.getPersona().get(0).getRol().equalsIgnoreCase("superadmin")
+				//		|| request.getPersona().get(0).getId().equalsIgnoreCase("1")) {
+				if (request.getPersona().get(0).getRol().equalsIgnoreCase("superadmin")) {
 					responseError.setCodigo(flags.SUPERADMINMASTER_ERROR_CODE);
 					responseError.setDetalle(flags.SUPERADMINMASTER_ERROR_MSN);
 					return new ResponseEntity<JsonApiBodyResponseErrors>(responseError, HttpStatus.BAD_REQUEST);
-				} else if (body.getPersona().get(0).getId() == "" || body.getPersona().get(0).getNombre().equals(" ")
+				} else if (body.getPersona().get(0).getNombre().equals(" ")
 						|| body.getPersona().get(0).getApellidos().equals("")
 						|| body.getPersona().get(0).getContrasena().equals("")
 						|| body.getPersona().get(0).getRol().equals("")
@@ -110,20 +110,21 @@ public class RegistrarApiController implements RegistrarApi {
 
 				else {
 					// Verificar que el rol sea valido
-					if (body.getPersona().get(0).getRol().equalsIgnoreCase("Admin")
+					if (body.getPersona().get(0).getRol().equalsIgnoreCase("Administrador")
 							|| body.getPersona().get(0).getRol().equalsIgnoreCase("Usuario")
 							|| body.getPersona().get(0).getRol().equalsIgnoreCase("SuperAdmin")) {
-						if (body.getPersona().get(0).getRol().equalsIgnoreCase("Admin")) {
+						if (body.getPersona().get(0).getRol().equalsIgnoreCase("Administrador")) {
 							// REGISTRO DE USUARIOS ADMIN
-							body.getPersona().get(0).setEstado("Pendiente");
-							RegistrarRequest persona = userRepository.save(body.getPersona().get(0));
+							body.getPersona().get(0).setEstado("Activo");
+							userRepository.save(body.getPersona().get(0));
 							responseSuccess.setId(request.getPersona().get(0).getId());
 							responseSuccess.setNombre(request.getPersona().get(0).getNombre());
 							responseSuccess.setEstado(request.getPersona().get(0).getEstado());
 							return new ResponseEntity<JsonApiBodyResponseSuccess>(responseSuccess, HttpStatus.OK);
 						} else {
 							// REGISTRO DE USUARIOS COMUNES
-							RegistrarRequest persona = userRepository.save(body.getPersona().get(0));
+							//RegistrarRequest persona = userRepository.save(body.getPersona().get(0));
+							userRepository.save(body.getPersona().get(0));
 							responseSuccess.setId(request.getPersona().get(0).getId());
 							responseSuccess.setNombre(request.getPersona().get(0).getNombre());
 							responseSuccess.setEstado(request.getPersona().get(0).getEstado());
@@ -143,12 +144,7 @@ public class RegistrarApiController implements RegistrarApi {
 				return new ResponseEntity<JsonApiBodyResponseErrors>(responseError, HttpStatus.FAILED_DEPENDENCY);
 			}
 
-		} else {
-			responseError.setCodigo(flags.CODE_4001);
-			responseError.setDetalle(flags.MSN_CODE_4001);
-			return new ResponseEntity<JsonApiBodyResponseErrors>(responseError, HttpStatus.FAILED_DEPENDENCY);
-
-		}
+		
 
 	}
 }

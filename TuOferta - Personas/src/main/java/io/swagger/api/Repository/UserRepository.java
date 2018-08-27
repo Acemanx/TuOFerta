@@ -5,7 +5,6 @@ import java.util.List;
 import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
 import org.springframework.data.repository.CrudRepository;
 import io.swagger.model.RegistrarRequest;
-import io.swagger.model.RegistrarRequest2;
 
 @EnableScan
 public interface UserRepository extends CrudRepository<RegistrarRequest, String>{

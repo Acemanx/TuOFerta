@@ -194,7 +194,7 @@ public class ListarApiController implements ListarApi {
 			if(login.isEmpty()) {
 				responseErrors.codigo("123");
 				responseErrors.detalle("No existe el usuario");
-				return new ResponseEntity<JsonApiBodyResponseErrors>(responseErrors, HttpStatus.CONFLICT);
+				return new ResponseEntity<JsonApiBodyResponseErrors>(responseErrors, HttpStatus.NOT_FOUND);
 			}else {
 				if(login.get(0).getContrasena().equals(body.getPersona().get(0).getContrasena())) {
 					persona.setPersona(login);
